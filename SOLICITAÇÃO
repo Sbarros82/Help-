@@ -1,122 +1,48 @@
-<!-- solicitar_servico.html -->
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitar Serviço - Sistema Helpdesk</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-
-        .service-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-        }
-
-        .service-container h2 {
-            margin-bottom: 20px;
-        }
-
-        .service-container label {
-            display: block;
-            margin-top: 10px;
-        }
-
-        .service-container input, .service-container textarea, .service-container select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .service-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .service-container button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Masterop - Sistema de Chamados</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="service-container">
-        <h2>Solicitar Serviço</h2>
-        <form id="serviceForm">
-            <label for="serviceType">Tipo de Serviço:</label>
-            <select id="serviceType" required>
-                <option value="">Selecione...</option>
-                <option value="Suporte Técnico">Suporte Técnico</option>
-                <option value="Manutenção">Manutenção</option>
-                <option value="Instalação">Instalação</option>
-                <option value="Outro">Outro</option>
-            </select>
+    <header>
+        <h1>Masterop - Sistema de Chamados</h1>
+    </header>
+    <div class="container">
+        <!-- Card para Abrir Chamado -->
+        <div class="card">
+            <h3>Abrir Novo Chamado</h3>
+            <form id="form-chamado">
+                <div class="form-group">
+                    <label for="titulo">Título</label>
+                    <input type="text" id="titulo" required>
+                </div>
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <textarea id="descricao" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="prioridade">Prioridade</label>
+                    <select id="prioridade">
+                        <option value="Alta">Alta</option>
+                        <option value="Média">Média</option>
+                        <option value="Baixa">Baixa</option>
+                    </select>
+                </div>
+                <button type="submit">Criar Chamado</button>
+            </form>
+            <div id="feedback" class="feedback"></div>
+        </div>
 
-            <label for="description">Descrição:</label>
-            <textarea id="description" rows="4" placeholder="Descreva o serviço solicitado..." required></textarea>
-
-            <label for="priority">Prioridade:</label>
-            <select id="priority" required>
-                <option value="">Selecione...</option>
-                <option value="Baixa">Baixa</option>
-                <option value="Média">Média</option>
-                <option value="Alta">Alta</option>
-            </select>
-
-            <label for="contact">Contato:</label>
-            <input type="text" id="contact" placeholder="Seu contato" required>
-
-            <button type="button" onclick="submitServiceRequest()">Enviar Solicitação</button>
-        </form>
+        <!-- Card para Acompanhar Chamados -->
+        <div class="card">
+            <h3>Meus Chamados</h3>
+            <button onclick="carregarChamados()">Atualizar Lista</button>
+            <ul id="lista-chamados"></ul>
+        </div>
     </div>
-
-    <script>
-        function submitServiceRequest() {
-            const serviceType = document.getElementById('serviceType').value;
-            const description = document.getElementById('description').value;
-            const priority = document.getElementById('priority').value;
-            const contact = document.getElementById('contact').value;
-
-            const requestData = {
-                serviceType,
-                description,
-                priority,
-                contact
-            };
-
-            fetch('/api/solicitar-servico', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Solicitação enviada com sucesso!');
-                    document.getElementById('serviceForm').reset();
-                } else {
-                    alert('Falha ao enviar solicitação: ' + data.message);
-                }
-            });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
