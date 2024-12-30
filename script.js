@@ -1,40 +1,31 @@
-document.getElementById('form-chamado').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const titulo = document.getElementById('titulo').value;
-    const descricao = document.getElementById('descricao').value;
-    const prioridade = document.getElementById('prioridade').value;
+// server.js
+const express = require('express');
+const bodyParser = require('body-parser');
 
-    const response = await fetch('/chamados', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titulo, descricao, prioridade })
-    });
+const app = express();
+const port = 3000;
 
-    if (response.ok) {
-        alert('Chamado criado com sucesso!');
-        carregarChamados();
-        this.reset();
+app.use(bodyParser.json());
+
+const users = [
+    { username: 'admin', password: '1234' }
+];
+
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        res.json({ success: true });
     } else {
-        alert('Erro ao criar chamado.');
+        res.json({ success: false, message: 'Usuário ou senha incorretos' });
     }
 });
 
-async function carregarChamados() {
-    const response = await fetch('/chamados');
-    const chamados = await response.json();
-    const lista = document.getElementById('lista-chamados');
-    lista.innerHTML = '';
+app.get('/dashboard', (req, res) => {
+    res.send('Bem-vindo ao painel de controle!');
+});
 
-    if (chamados.length === 0) {
-        lista.innerHTML = '<li>Não há chamados registrados.</li>';
-    } else {
-        chamados.forEach(chamado => {
-            const li = document.createElement('li');
-            li.textContent = `${chamado.id}: ${chamado.titulo} (${chamado.status}) - Prioridade: ${chamado.prioridade}`;
-            lista.appendChild(li);
-        });
-    }
-}
-
-// Carregar chamados ao abrir a página
-carregarChamados();
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+});
